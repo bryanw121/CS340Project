@@ -1,135 +1,158 @@
--- MySQL dump 10.13  Distrib 5.1.66, for redhat-linux-gnu (x86_64)
---
--- Host: mysql.eecs.oregonstate.edu    Database: CS275
--- ------------------------------------------------------
--- Server version	5.1.65-community-log
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET FOREIGN_KEY_CHECKS = 0;
+SET AUTOCOMMIT = 0;
 
 --
--- Table structure for table `bsg_planets`
+-- Table structure for table Customers
 --
 
-DROP TABLE IF EXISTS `bsg_planets`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bsg_planets` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `population` bigint(20) DEFAULT NULL,
-  `language` varchar(255) DEFAULT NULL,
-  `capital` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE OR REPLACE TABLE Customers (
+  customer_id int NOT NULL AUTO_INCREMENT,
+  customer_name varchar(50) NOT NULL,
+  phone_number varchar(15) NOT NULL,
+  PRIMARY KEY (customer_id)
+);
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `bsg_planets`
+-- Table structure for table Dietary_Restrictions
 --
 
-LOCK TABLES `bsg_planets` WRITE;
-/*!40000 ALTER TABLE `bsg_planets` DISABLE KEYS */;
-INSERT INTO `bsg_planets` VALUES (1,'Gemenon',2800000000,'Old Gemenese','Oranu'),(2,'Leonis',2600000000,'Leonese','Luminere'),(3,'Caprica',4900000000,'Caprican','Caprica City'),(7,'Sagittaron',1700000000,NULL,'Tawa'),(16,'Aquaria',25000,NULL,NULL),(17,'Canceron',6700000000,NULL,'Hades'),(18,'Libran',2100000,NULL,NULL),(19,'Picon',1400000000,NULL,'Queestown'),(20,'Scorpia',450000000,NULL,'Celeste'),(21,'Tauron',2500000000,'Tauron','Hypatia'),(22,'Virgon',4300000000,NULL,'Boskirk');
-/*!40000 ALTER TABLE `bsg_planets` ENABLE KEYS */;
-UNLOCK TABLES;
+CREATE OR REPLACE TABLE Dietary_Restrictions (
+  restriction_id int NOT NULL AUTO_INCREMENT,
+  description varchar(255) NOT NULL,
+  PRIMARY KEY (restriction_id)
+);
 
+-- --------------------------------------------------------
 --
--- Table structure for table `bsg_cert`
---
-
-DROP TABLE IF EXISTS `bsg_cert`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bsg_cert` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `bsg_cert`
+-- Table structure for table Customers_has_Dietary_Restrictions
 --
 
-LOCK TABLES `bsg_cert` WRITE;
-/*!40000 ALTER TABLE `bsg_cert` DISABLE KEYS */;
-INSERT INTO `bsg_cert` VALUES (1,'Raptor'),(2,'Viper'),(3,'Mechanic'),(4,'Command');
-/*!40000 ALTER TABLE `bsg_cert` ENABLE KEYS */;
-UNLOCK TABLES;
+CREATE OR REPLACE TABLE Customers_has_Dietary_Restrictions (
+  customer_id int,
+  restriction_id int,
+  PRIMARY KEY (customer_id, restriction_id),
+  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+  -- When either a dietary restriction or a customer is deleted, we want to delete this relationship
+  ON DELETE CASCADE,
+  FOREIGN KEY (restriction_id) REFERENCES Dietary_Restrictions(restriction_id)
+  ON DELETE CASCADE
+);
 
---
--- Table structure for table `bsg_people`
---
 
-DROP TABLE IF EXISTS `bsg_people`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bsg_people` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fname` varchar(255) NOT NULL,
-  `lname` varchar(255) DEFAULT NULL,
-  `homeworld` int(11) DEFAULT NULL,
-  `age` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `homeworld` (`homeworld`),
-  CONSTRAINT `bsg_people_ibfk_1` FOREIGN KEY (`homeworld`) REFERENCES `bsg_planets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
+-- --------------------------------------------------------
 --
--- Dumping data for table `bsg_people`
+-- Table structure for table Dishes
 --
 
-LOCK TABLES `bsg_people` WRITE;
-/*!40000 ALTER TABLE `bsg_people` DISABLE KEYS */;
-INSERT INTO `bsg_people` VALUES (1,'William','Adama',3,61),(2,'Lee','Adama',3,30),(3,'Laura','Roslin',3,NULL),(4,'Kara','Thrace',3,NULL),(5,'Gaius','Baltar',3,NULL),(6,'Saul','Tigh',NULL,71),(7,'Karl','Agathon',1,NULL),(8,'Galen','Tyrol',1,32),(9,'Callandra','Henderson',NULL,NULL);
-/*!40000 ALTER TABLE `bsg_people` ENABLE KEYS */;
-UNLOCK TABLES;
+CREATE OR REPLACE TABLE Dishes (
+  dish_id int NOT NULL AUTO_INCREMENT,
+  dish_name varchar(45) NOT NULL,
+  price decimal(4,2) NOT NULL,
+  PRIMARY KEY (dish_id)
+);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `bsg_cert_people`
+-- Table structure for table Orders
 --
 
-DROP TABLE IF EXISTS `bsg_cert_people`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bsg_cert_people` (
-  `cid` int(11) NOT NULL DEFAULT '0',
-  `pid` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`cid`,`pid`),
-  KEY `pid` (`pid`),
-  CONSTRAINT `bsg_cert_people_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `bsg_cert` (`id`),
-  CONSTRAINT `bsg_cert_people_ibfk_2` FOREIGN KEY (`pid`) REFERENCES `bsg_people` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE OR REPLACE TABLE Orders (
+  order_id int NOT NULL AUTO_INCREMENT,
+  time datetime NOT NULL,
+  customer_id int,
+  dish_quantity int NOT NULL DEFAULT 1,
+  PRIMARY KEY (order_id),
+  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+  -- if a customer is deleted, we still want to have the order logged
+  ON DELETE SET NULL
+);
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `bsg_cert_people`
+-- Table structure for table Orders_has_Dishes
 --
 
-LOCK TABLES `bsg_cert_people` WRITE;
-/*!40000 ALTER TABLE `bsg_cert_people` DISABLE KEYS */;
-INSERT INTO `bsg_cert_people` VALUES (2,2),(4,2),(4,3),(2,4),(4,6),(1,7),(3,8),(3,9);
-/*!40000 ALTER TABLE `bsg_cert_people` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+CREATE OR REPLACE TABLE Orders_has_Dishes (
+  order_id int,
+  dish_id int,
+  PRIMARY KEY (order_id, dish_id),
+  FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+  ON DELETE CASCADE,
+  FOREIGN KEY (dish_id) REFERENCES Dishes(dish_id)
+  ON DELETE CASCADE
+);
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+-- --------------------------------------------------------
 
--- Dump completed on 2013-02-04 12:54:40
+--
+-- Table structure for table Ratings
+--
+
+CREATE OR REPLACE TABLE Ratings (
+  rating_id int NOT NULL AUTO_INCREMENT,
+  rating tinyint(5) NOT NULL,
+  customer_id int,
+  dish_id int NOT NULL,
+  PRIMARY KEY (rating_id),
+  -- when a customer is deleted, the ratings they gave should stay
+  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+  ON DELETE SET NULL,
+  -- when a dish is deleted, its rating should also be deleted
+  FOREIGN KEY (dish_id) REFERENCES Dishes(dish_id)
+  ON DELETE CASCADE
+);
+
+-- INSERT INTO statements
+
+INSERT INTO Customers (customer_id, customer_name, phone_number)
+VALUES (1, 'John Mayer', '(212) 555-1234'),
+(2, 'Ethan Wright', '(312) 555-5678'),
+(3, 'Samantha Lee', '(415) 555-9012'),
+(4, 'Alexander Patel', '(305) 555-6789'),
+(5, 'Olivia Kim', '(206) 555-6789');
+
+
+INSERT INTO Orders (order_id, time, customer_id)
+VALUES (1, '2023-05-02 10:15:30', 1),
+(2, '2023-05-01 10:20:45', 3),
+(3, '2023-04-30 09:00:00', 3),
+(4, '2023-04-29 13:59:59', 4);
+
+INSERT INTO Dishes (dish_id, dish_name, price)
+VALUES (1, 'Hamburger', 3.50),
+(2, 'Cheeseburger', 3.70),
+(3, 'Fries', 2.00),
+(4, 'Tater Tots', 2.50);
+
+INSERT INTO Orders_has_Dishes (order_id, dish_id)
+VALUES (1, 1),
+(2, 2),
+(3, 1),
+(3, 3),
+(4, 2);
+
+INSERT INTO Ratings (rating_id, rating, customer_id, dish_id)
+VALUES (1, 5, 1, 1),
+(2, 4, 3, 2),
+(3, 5, 3, 1),
+(4, 3, 4, 2);
+
+INSERT INTO Customers_has_Dietary_Restrictions (customer_id, restriction_id)
+VALUES (1, 2),
+(1, 3),
+(2, 3),
+(3, 3);
+
+INSERT INTO Dietary_Restrictions (restriction_id, description)
+VALUES (1, 'Vegetarian'),
+(2, 'Gluten-free'),
+(3, 'Dairy-free');
+
+
+SET FOREIGN_KEY_CHECKS = 1;

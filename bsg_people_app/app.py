@@ -18,9 +18,9 @@ app = Flask(__name__)
 
 # database connection info
 app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_OSUusername"
-app.config["MYSQL_PASSWORD"] = "XXXX"
-app.config["MYSQL_DB"] = "cs340_OSUusername"
+app.config["MYSQL_USER"] = "cs340_wubr"
+app.config["MYSQL_PASSWORD"] = "9544"
+app.config["MYSQL_DB"] = "cs340_wubr"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
@@ -177,4 +177,4 @@ def edit_people(id):
 # Listener
 # change the port number if deploying on the flip servers
 if __name__ == "__main__":
-    app.run(port=3000, debug=True)
+    app.run(port=9544, debug=True)
